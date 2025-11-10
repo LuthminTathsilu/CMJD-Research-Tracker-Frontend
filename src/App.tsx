@@ -1,17 +1,22 @@
-import React from 'react';
-import './App.css';
+import React from "react";
+import { BrowserRouter, Routes, Route } from "react-router-dom";
+import { NavBar } from "./components/NavBar";
+import Document from "./components/Document"; 
+import Home from "./components/Home";
 import 'bootstrap/dist/css/bootstrap.min.css';
-import { NavBar } from './components/NavBar';
-import  DocumentManager  from './components/Document';
-import DocumentUpload from "./components/Document";
 
 
 function App() {
   return (
-    <div>
+    <BrowserRouter>
       <NavBar />
-      <DocumentUpload />
-    </div>
+      <div className="container mt-4">
+        <Routes>
+          <Route path="/" element={<Home />} />
+          <Route path="/documents" element={<Document />} />
+        </Routes>
+      </div>
+    </BrowserRouter>
   );
 }
 

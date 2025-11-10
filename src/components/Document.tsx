@@ -1,6 +1,6 @@
 // src/components/DocumentUpload.tsx
 import React, { useState } from "react";
-import { uploadDocument, getDocumentById, deleteDocument } from "../service/documentService.js";
+import { uploadDocument, getDocumentById, deleteDocument } from "../service/documentService";
 import Form from "react-bootstrap/Form";
 import Button from "react-bootstrap/Button";
 import Card from "react-bootstrap/Card";
