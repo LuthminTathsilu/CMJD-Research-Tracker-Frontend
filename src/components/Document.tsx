@@ -1,73 +1,97 @@
+// src/components/DocumentUpload.tsx
 import React, { useState } from "react";
-import { uploadDocument } from "../services/documentService.js";
+import { uploadDocument, getDocumentById, deleteDocument } from "../service/documentService.js";
 import Form from "react-bootstrap/Form";
 import Button from "react-bootstrap/Button";
 import Card from "react-bootstrap/Card";
-import Spinner from "react-bootstrap/Spinner";
 import Alert from "react-bootstrap/Alert";
+import Spinner from "react-bootstrap/Spinner";
 
 const DocumentUpload: React.FC = () => {
   const [formData, setFormData] = useState({
     title: "",
     description: "",
     projectId: "",
-    uploadedBy: "user123", // replace with actual logged-in user
+    uploadedBy: "user123",
   });
 
   const [file, setFile] = useState<File | null>(null);
   const [uploading, setUploading] = useState(false);
-  const [message, setMessage] = useState<{ type: "success" | "error" | ""; text: string }>({
-    type: "",
-    text: "",
-  });
+  const [message, setMessage] = useState("");
+  const [searchId, setSearchId] = useState("");
+  const [foundDoc, setFoundDoc] = useState<any>(null);
+  const [loading, setLoading] = useState(false);
 
-  // Handle text input change
-  const handleChange = (
-    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
-  ) => {
+  // Handle input changes
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
 
-  // Handle file selection
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.files && e.target.files.length > 0) {
       setFile(e.target.files[0]);
     }
   };
 
-  // Handle form submission
+  // Upload handler
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     if (!file) return alert("Please select a file!");
 
     setUploading(true);
-    setMessage({ type: "", text: "" });
+    setMessage("");
 
     try {
-      await uploadDocument(file, {
-        ...formData,
-        uploadedAt: new Date().toISOString(),
-      });
-
-      setMessage({ type: "success", text: "✅ Document uploaded successfully!" });
+      await uploadDocument(file, { ...formData, uploadedAt: new Date().toISOString() });
+      setMessage("✅ Document uploaded successfully!");
       setFormData({ title: "", description: "", projectId: "", uploadedBy: "user123" });
       setFile(null);
     } catch (error) {
       console.error(error);
-      setMessage({ type: "error", text: "❌ Failed to upload document." });
+      setMessage("❌ Failed to upload document.");
     } finally {
       setUploading(false);
     }
   };
 
-  return (
-    <div className="d-flex justify-content-center align-items-center vh-100 bg-light">
-      <Card className="shadow-lg p-4" style={{ width: "40rem", borderRadius: "15px" }}>
-        <h3 className="text-center mb-4 fw-bold text-primary">📤 Upload Document</h3>
+  // Fetch document by ID
+  const handleFetch = async () => {
+    if (!searchId) return alert("Enter a document ID!");
+    setLoading(true);
+    setFoundDoc(null);
+    try {
+      const data = await getDocumentById(searchId);
+      setFoundDoc(data);
+    } catch (error) {
+      setMessage("❌ Document not found.");
+    } finally {
+      setLoading(false);
+    }
+  };
 
+  // Delete document
+  const handleDelete = async () => {
+    if (!searchId) return alert("Enter document ID to delete!");
+    if (!window.confirm("Are you sure you want to delete this document?")) return;
+
+    try {
+      await deleteDocument(searchId);
+      setMessage("🗑️ Document deleted successfully.");
+      setFoundDoc(null);
+    } catch (error) {
+      setMessage("❌ Failed to delete document.");
+    }
+  };
+
+  return (
+    <div className="container mt-4" style={{ maxWidth: "700px" }}>
+      <Card className="shadow-lg p-4">
+        <h3 className="text-center mb-4 text-primary">📄 Document Manager</h3>
+
+        {/* Upload Form */}
         <Form onSubmit={handleSubmit}>
           <Form.Group className="mb-3">
-            <Form.Label className="fw-semibold text-secondary">Document Title</Form.Label>
+            <Form.Label>Document Title</Form.Label>
             <Form.Control
               type="text"
               name="title"
@@ -75,12 +99,11 @@ const DocumentUpload: React.FC = () => {
               value={formData.title}
               onChange={handleChange}
               required
-              className="border-primary shadow-sm"
             />
           </Form.Group>
 
           <Form.Group className="mb-3">
-            <Form.Label className="fw-semibold text-secondary">Description</Form.Label>
+            <Form.Label>Description</Form.Label>
             <Form.Control
               as="textarea"
               rows={3}
@@ -89,12 +112,11 @@ const DocumentUpload: React.FC = () => {
               value={formData.description}
               onChange={handleChange}
               required
-              className="border-primary shadow-sm"
             />
           </Form.Group>
 
           <Form.Group className="mb-3">
-            <Form.Label className="fw-semibold text-secondary">Project ID</Form.Label>
+            <Form.Label>Project ID</Form.Label>
             <Form.Control
               type="text"
               name="projectId"
@@ -102,60 +124,56 @@ const DocumentUpload: React.FC = () => {
               value={formData.projectId}
               onChange={handleChange}
               required
-              className="border-primary shadow-sm"
             />
           </Form.Group>
 
-          <Form.Group className="mb-4">
-            <Form.Label className="fw-semibold text-secondary">Choose File</Form.Label>
-            <Form.Control
-              type="file"
-              onChange={handleFileChange}
-              required
-              className="border-primary shadow-sm"
-            />
-            {file && <Form.Text className="text-success fw-medium">📁 {file.name}</Form.Text>}
+          <Form.Group className="mb-3">
+            <Form.Label>Choose File</Form.Label>
+            <Form.Control type="file" onChange={handleFileChange} required />
+            {file && <Form.Text>Selected file: {file.name}</Form.Text>}
           </Form.Group>
 
-          <div className="d-flex justify-content-center">
-            <Button
-              type="submit"
-              variant="gradient"
-              disabled={uploading}
-              className="px-5 py-2 fw-semibold text-white"
-              style={{
-                background:
-                  "linear-gradient(90deg, rgba(0,123,255,1) 0%, rgba(0,200,255,1) 100%)",
-                border: "none",
-                borderRadius: "10px",
-              }}
-            >
-              {uploading ? (
-                <>
-                  <Spinner
-                    as="span"
-                    animation="border"
-                    size="sm"
-                    role="status"
-                    aria-hidden="true"
-                    className="me-2"
-                  />
-                  Uploading...
-                </>
-              ) : (
-                "Upload Document"
-              )}
-            </Button>
-          </div>
+          <Button type="submit" variant="primary" disabled={uploading} className="w-100">
+            {uploading ? (
+              <>
+                <Spinner animation="border" size="sm" /> Uploading...
+              </>
+            ) : (
+              "Upload Document"
+            )}
+          </Button>
         </Form>
 
-        {message.text && (
-          <Alert
-            variant={message.type === "success" ? "success" : "danger"}
-            className="mt-4 text-center fw-semibold"
-          >
-            {message.text}
-          </Alert>
+        {message && <Alert variant="info" className="mt-3">{message}</Alert>}
+
+        <hr className="my-4" />
+
+        {/* Get/Delete Section */}
+        <h5 className="text-secondary mb-3">🔍 Find or Delete Document</h5>
+        <Form.Group className="mb-3 d-flex">
+          <Form.Control
+            type="text"
+            placeholder="Enter Document ID"
+            value={searchId}
+            onChange={(e) => setSearchId(e.target.value)}
+          />
+          <Button variant="success" className="ms-2" onClick={handleFetch} disabled={loading}>
+            {loading ? "Searching..." : "Get Document"}
+          </Button>
+          <Button variant="danger" className="ms-2" onClick={handleDelete}>
+            Delete
+          </Button>
+        </Form.Group>
+
+        {foundDoc && (
+          <Card className="p-3 bg-light">
+            <h6>📘 Document Details:</h6>
+            <p><strong>Title:</strong> {foundDoc.title}</p>
+            <p><strong>Description:</strong> {foundDoc.description}</p>
+            <p><strong>Uploaded By:</strong> {foundDoc.uploadedBy}</p>
+            <p><strong>Project ID:</strong> {foundDoc.projectId}</p>
+            <p><strong>Uploaded At:</strong> {foundDoc.uploadedAt}</p>
+          </Card>
         )}
       </Card>
     </div>
