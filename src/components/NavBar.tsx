@@ -1,10 +1,19 @@
 import React from "react";
-import { Link, useLocation } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import Container from "react-bootstrap/Container";
 import Nav from "react-bootstrap/Nav";
 import Navbar from "react-bootstrap/Navbar";
+import { Button } from "react-bootstrap";
+import { useAuth } from "./auth/AuthProvider";
 
 export const NavBar: React.FC = () => {
+   const { isAuthenticated, logout } = useAuth();
+  const navigate = useNavigate();
+
+  const handleOnLogut = () => {
+    logout();
+    navigate("/signin");
+  };
   const location = useLocation(); // to detect current active route
 
   const linkStyle = (path: string) => ({
@@ -22,17 +31,9 @@ export const NavBar: React.FC = () => {
         </Navbar.Brand>
         <Navbar.Toggle aria-controls="basic-navbar-nav" />
         <Navbar.Collapse id="basic-navbar-nav">
+           {/* <Navbar.Brand as={Link} to="/">Home</Navbar.Brand> */}
           <Nav className="me-auto">
-            <Nav.Link as={Link} to="/" style={linkStyle("/")}>
-              Home
-            </Nav.Link>
-            <Nav.Link as={Link} to="/SignIn" style={linkStyle("/SignIn")}>
-              SignIn
-            </Nav.Link>
-            <Nav.Link as={Link} to="/SignUp" style={linkStyle("/SignUp")}>
-              SignUp
-            </Nav.Link>
-            <Nav.Link as={Link} to="/documents" style={linkStyle("/documents")}>
+             {isAuthenticated ?(<><Nav.Link as={Link} to="/documents" style={linkStyle("/documents")}>
               Document Maintenance
             </Nav.Link>
             <Nav.Link as={Link} to="/features" style={linkStyle("/features")}>
@@ -40,7 +41,23 @@ export const NavBar: React.FC = () => {
             </Nav.Link>
             <Nav.Link as={Link} to="/pricing" style={linkStyle("/pricing")}>
               Pricing
+            </Nav.Link> 
+            <Button variant="danger" onClick={handleOnLogut}>
+                  Logout
+            </Button>
+            </>
+          ):(
+            <> <Nav.Link as={Link} to="/" style={linkStyle("/")}>
+              Home
             </Nav.Link>
+            <Nav.Link as={Link} to="/signIn" style={linkStyle("/signIn")}>
+              SignIn
+            </Nav.Link>
+            <Nav.Link as={Link} to="/signUp" style={linkStyle("/signUp")}>
+              SignUp
+            </Nav.Link>
+            </>
+          )} 
           </Nav>
         </Navbar.Collapse>
       </Container>

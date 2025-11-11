@@ -1,6 +1,6 @@
 import axios from "axios";
 
-const url = "http://localhost:8044/courseregis/api/v1/auth"
+const url = "http://localhost:8044/api/v1/auth"
 
 export const SignInProcess = async(signIn: any)=>{
   try{

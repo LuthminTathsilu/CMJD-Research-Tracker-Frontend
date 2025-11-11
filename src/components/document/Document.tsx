@@ -1,6 +1,6 @@
 // src/components/DocumentUpload.tsx
 import React, { useState } from "react";
-import { uploadDocument, getDocumentById, deleteDocument } from "../service/documentService";
+import { uploadDocument, getDocumentById, deleteDocument } from "../../service/documentService";
 import Form from "react-bootstrap/Form";
 import Button from "react-bootstrap/Button";
 import Card from "react-bootstrap/Card";
@@ -42,7 +42,7 @@ const DocumentUpload: React.FC = () => {
     setMessage("");
 
     try {
-      await uploadDocument(file, { ...formData, uploadedAt: new Date().toISOString() });
+      await uploadDocument(file, { ...formData, uploadedAt: new Date().toISOString().replace("Z", "")  });
       setMessage("✅ Document uploaded successfully!");
       setFormData({ title: "", description: "", projectId: "", uploadedBy: "user123" });
       setFile(null);
