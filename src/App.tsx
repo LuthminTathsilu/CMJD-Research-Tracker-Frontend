@@ -6,9 +6,11 @@ import Home from "./components/Home";
 import { SignIn } from "./components/auth/SignIn";
 import { SignUp } from "./components/auth/SignUp";
 import 'bootstrap/dist/css/bootstrap.min.css';
+import { AuthProvider } from './components/auth/AuthProvider';
 
 function App() {
   return (
+    <AuthProvider>
     <BrowserRouter>
       <NavBar />
       <div className="container mt-4">
@@ -20,7 +22,9 @@ function App() {
         </Routes>
       </div>
     </BrowserRouter>
+    </AuthProvider>
   );
 }
 
 export default App;
+  

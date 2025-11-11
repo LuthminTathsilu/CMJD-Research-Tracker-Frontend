@@ -40,7 +40,7 @@ export const SignUp = () => {
      const token = await SignUpProcess(user)
      console.log(token)
      login(token)
-     navigate("/documents")
+     navigate("/signin")
   }  
 
   return (
