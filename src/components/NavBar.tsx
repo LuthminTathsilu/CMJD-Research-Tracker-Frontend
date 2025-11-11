@@ -26,6 +26,12 @@ export const NavBar: React.FC = () => {
             <Nav.Link as={Link} to="/" style={linkStyle("/")}>
               Home
             </Nav.Link>
+            <Nav.Link as={Link} to="/SignIn" style={linkStyle("/SignIn")}>
+              SignIn
+            </Nav.Link>
+            <Nav.Link as={Link} to="/SignUp" style={linkStyle("/SignUp")}>
+              SignUp
+            </Nav.Link>
             <Nav.Link as={Link} to="/documents" style={linkStyle("/documents")}>
               Document Maintenance
             </Nav.Link>

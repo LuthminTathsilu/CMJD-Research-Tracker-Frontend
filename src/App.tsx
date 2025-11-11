@@ -3,8 +3,9 @@ import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { NavBar } from "./components/NavBar";
 import Document from "./components/Document"; 
 import Home from "./components/Home";
+import { SignIn } from "./components/auth/SignIn";
+import { SignUp } from "./components/auth/SignUp";
 import 'bootstrap/dist/css/bootstrap.min.css';
-
 
 function App() {
   return (
@@ -13,6 +14,8 @@ function App() {
       <div className="container mt-4">
         <Routes>
           <Route path="/" element={<Home />} />
+          <Route path="/signin" element={<SignIn />} />
+          <Route path="/signup" element={<SignUp />} />
           <Route path="/documents" element={<Document />} />
         </Routes>
       </div>
