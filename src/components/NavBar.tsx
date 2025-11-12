@@ -6,6 +6,7 @@ import Navbar from "react-bootstrap/Navbar";
 import { Button } from "react-bootstrap";
 import { useAuth } from "./auth/AuthProvider";
 
+
 export const NavBar: React.FC = () => {
    const { isAuthenticated, logout } = useAuth();
   const navigate = useNavigate();
@@ -33,7 +34,9 @@ export const NavBar: React.FC = () => {
         <Navbar.Collapse id="basic-navbar-nav">
            {/* <Navbar.Brand as={Link} to="/">Home</Navbar.Brand> */}
           <Nav className="me-auto">
-             {isAuthenticated ?(<><Nav.Link as={Link} to="/documents" style={linkStyle("/documents")}>
+             {isAuthenticated ?(
+             <>
+             <Nav.Link as={Link} to="/documents" style={linkStyle("/documents")}>
               Document Maintenance
             </Nav.Link>
             <Nav.Link as={Link} to="/features" style={linkStyle("/features")}>
@@ -41,6 +44,8 @@ export const NavBar: React.FC = () => {
             </Nav.Link>
             <Nav.Link as={Link} to="/pricing" style={linkStyle("/pricing")}>
               Pricing
+            </Nav.Link><Nav.Link as={Link} to="/projects" style={linkStyle("/projects")}>
+              Project Maintainance 
             </Nav.Link> 
             <Button variant="danger" onClick={handleOnLogut}>
                   Logout

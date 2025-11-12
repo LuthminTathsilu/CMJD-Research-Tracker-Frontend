@@ -23,17 +23,29 @@ export const SignIn = () => {
     const {name, value} = e.target;
     setUser((prev)=> ({...prev, [name]:value}))
   }
-  const handleOnSubmit = async (e:React.FormEvent<HTMLFormElement>)=>{
-    e.preventDefault()
-    const token = await SignInProcess(user)
-    console.log(token)
-    setUser({username:"",password:""})
-    login(token)
-    navigate("/documents")
+  const handleOnSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    try {
+      const token = await SignInProcess(user);
+      if (token) {
+        console.log("Received token:", token);
 
-    
+        // ✅ Save token to localStorage
+        localStorage.setItem("authToken", token);
 
-  }
+        // ✅ Pass token to AuthProvider if needed
+        login(token);
+
+        // ✅ Navigate to Projects page
+        navigate("/projects");
+      } else {
+        alert("Login failed: No token returned");
+      }
+    } catch (error) {
+      console.error("Login failed:", error);
+      alert("Invalid username or password");
+    }
+  };
 
   return (
     <>
