@@ -44,6 +44,9 @@ export const NavBar: React.FC = () => {
             </Nav.Link> 
              <Nav.Link as={Link} to="/milestone" style={linkStyle("/milestone")}>
               Milestone Maintainance 
+            </Nav.Link>
+            <Nav.Link as={Link} to="/pi" style={linkStyle("/pi")}>
+              Investigator Maintainance 
             </Nav.Link> 
             <Button variant="danger" onClick={handleOnLogut}>
                   Logout
