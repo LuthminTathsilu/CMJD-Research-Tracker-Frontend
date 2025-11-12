@@ -44,3 +44,34 @@ You don’t have to ever use `eject`. The curated feature set is suitable for sm
 You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
 
 To learn React, check out the [React documentation](https://reactjs.org/).
+
+
+
+
+# Research Project Tracker – Frontend
+
+## Description
+This is the frontend application for the Research Project Tracker system.  
+It provides a responsive and interactive interface for managing projects, milestones, and documents, connecting with the Spring Boot backend via REST API.  
+Supports JWT-based authentication and role-based routing.
+
+**Key Features:**  
+- React + TypeScript SPA  
+- JWT authentication with role-based access  
+- CRUD operations for Projects, Milestones, and Documents  
+- Responsive UI with React Bootstrap / Tailwind CSS  
+- Navigation with React Router  
+
+---
+
+## Tech Stack
+- React (TypeScript)  
+- React Router (SPA navigation)  
+- Axios (API communication)  
+- Context API (global state & authentication)  
+- React Bootstrap / Tailwind CSS (responsive UI)  
+
+---
+
+
+
