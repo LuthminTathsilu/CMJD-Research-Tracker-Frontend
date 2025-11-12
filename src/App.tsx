@@ -12,31 +12,37 @@ import { Milestone } from "./components/milestone/Milestone";
 import { PrincipalInvestigator } from "./components/pi/PrincipalInvestigator";
 import { Member } from "./components/member/Member";
 import { Admin } from "./components/admin/Admin";
+import Footer from "./components/footer";
 
 function App() {
   return (
     <AuthProvider>
       <BrowserRouter>
-        <NavBar />
-        <div className="container mt-4">
-          <Routes>
-            <Route path="/" element={<Home />} />
-            <Route path="/signin" element={<SignIn />} />
-            <Route path="/signup" element={<SignUp />} />
-            <Route path="/documents" element={<Document />} />
-            <Route path="/projects" element={<Project />} />
-            
-            {/* ✅ FIXED: no need to manually pass projectId */}
-            <Route path="/milestone/:projectId" element={<Milestone />} />
+        <div className="d-flex flex-column min-vh-100">
+          <NavBar />
+          
+          {/* Main content grows to fill available space */}
+          <div className="flex-grow-1 container mt-4">
+            <Routes>
+              <Route path="/" element={<Home />} />
+              <Route path="/signin" element={<SignIn />} />
+              <Route path="/signup" element={<SignUp />} />
+              <Route path="/documents" element={<Document />} />
+              <Route path="/projects" element={<Project />} />
+              <Route path="/milestone/:projectId" element={<Milestone />} />
+              <Route path="/pi" element={<PrincipalInvestigator />} />
+              <Route path="/member" element={<Member />} />
+              <Route path="/admin" element={<Admin />} />
+            </Routes>
+          </div>
 
-            <Route path="/pi" element={<PrincipalInvestigator />} />
-            <Route path="/member" element={<Member />} />
-            <Route path="/admin" element={<Admin />} />
-          </Routes>
+          {/* Footer will now stick to bottom */}
+          <Footer />
         </div>
       </BrowserRouter>
     </AuthProvider>
   );
 }
+
 
 export default App;
