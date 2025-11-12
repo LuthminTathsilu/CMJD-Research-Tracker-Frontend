@@ -50,7 +50,7 @@ export const Project = ()=> {
 
     useEffect(()=>{
         loadData();
-    },[])
+    },[loadData]);
     
     // handle edit form
     const handleOnEdit = (project: ProjectModel) =>{

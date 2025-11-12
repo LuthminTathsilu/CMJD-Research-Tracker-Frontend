@@ -8,6 +8,7 @@ import { SignUp } from "./components/auth/SignUp";
 import 'bootstrap/dist/css/bootstrap.min.css';
 import { AuthProvider } from './components/auth/AuthProvider';
 import { Project } from "./components/projects/Project";
+import { Milestone } from "./components/milestone/Milestone";
 
 
 function App() {
@@ -23,7 +24,7 @@ function App() {
             <Route path="/signup" element={<SignUp />} />
             <Route path="/documents" element={<Document />} />
             <Route path="/projects" element={<Project />} />
-
+            <Route path="/milestone" element={<Milestone projectId={""} />} />
           </Routes>
         </div>
       </BrowserRouter>

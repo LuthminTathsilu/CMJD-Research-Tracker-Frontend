@@ -39,13 +39,11 @@ export const NavBar: React.FC = () => {
              <Nav.Link as={Link} to="/documents" style={linkStyle("/documents")}>
               Document Maintenance
             </Nav.Link>
-            <Nav.Link as={Link} to="/features" style={linkStyle("/features")}>
-              Features
-            </Nav.Link>
-            <Nav.Link as={Link} to="/pricing" style={linkStyle("/pricing")}>
-              Pricing
-            </Nav.Link><Nav.Link as={Link} to="/projects" style={linkStyle("/projects")}>
+            <Nav.Link as={Link} to="/projects" style={linkStyle("/projects")}>
               Project Maintainance 
+            </Nav.Link> 
+             <Nav.Link as={Link} to="/milestone" style={linkStyle("/milestone")}>
+              Milestone Maintainance 
             </Nav.Link> 
             <Button variant="danger" onClick={handleOnLogut}>
                   Logout
