@@ -8,202 +8,209 @@ import Alert from "react-bootstrap/Alert";
 import Spinner from "react-bootstrap/Spinner";
 
 const DocumentUpload: React.FC = () => {
-  const [formData, setFormData] = useState({
-    title: "",
-    description: "",
-    projectId: "",
-    uploadedBy: "", // Initialized to empty string for user input
-  });
+  const [formData, setFormData] = useState({
+    title: "",
+   description: "",
+   projectId: "",
+   uploadedBy: "", 
+   });
 
-  const [file, setFile] = useState<File | null>(null);
-  const [uploading, setUploading] = useState(false);
-  const [message, setMessage] = useState("");
-  const [searchId, setSearchId] = useState("");
-  const [foundDoc, setFoundDoc] = useState<any>(null);
-  const [loading, setLoading] = useState(false);
+ const [file, setFile] = useState<File | null>(null);
+ const [uploading, setUploading] = useState(false);
+ const [message, setMessage] = useState("");
+ const [searchId, setSearchId] = useState("");
+ const [foundDoc, setFoundDoc] = useState<any>(null);
+ const [loading, setLoading] = useState(false);
 
-  // Handle input changes
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
-    setFormData({ ...formData, [e.target.name]: e.target.value });
-  };
+ // Handle input changes
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+    setFormData({ ...formData, [e.target.name]: e.target.value });
+  };
 
-  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    if (e.target.files && e.target.files.length > 0) {
-      setFile(e.target.files[0]);
-    }
-  };
+  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+   if (e.target.files && e.target.files.length > 0) {
+      setFile(e.target.files[0]);
+   }
+  };
 
-  // Upload handler
-  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
-    if (!file) return alert("Please select a file!");
+ // Upload handler
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+   e.preventDefault();
+   if (!file) return alert("Please select a file!");
 
-    // ✅ VALIDATION FIX: Ensure uploadedBy is not empty
     if (!formData.uploadedBy || formData.uploadedBy.trim() === "") {
         return alert("Please enter the Uploader/Member ID.");
     }
 
-    setUploading(true);
-    setMessage("");
+    setUploading(true);
+   setMessage("");
 
-    try {
-        // ✅ DATE FIX: Truncate ISO string to prevent DateTimeParseException
-        const isoString = new Date().toISOString();
-        const uploadedAtTimestamp = isoString.substring(0, 19);
+    try {
+     const isoString = new Date().toISOString();
+     const uploadedAtTimestamp = isoString.substring(0, 19);
 
-        await uploadDocument(file, { 
-             ...formData, 
-             uploadedAt: uploadedAtTimestamp 
-          });
-        setMessage("✅ Document uploaded successfully!");
+     await uploadDocument(file, { 
+       ...formData, 
+       uploadedAt: uploadedAtTimestamp 
+      });
+     setMessage("✅ Document uploaded successfully!");
         
-        // ✅ STATE RESET FIX: Reset all fields to empty string
-        setFormData({ title: "", description: "", projectId: "", uploadedBy: "" });
-        setFile(null);
-    } catch (error) {
-      console.error(error);
-      setMessage("❌ Failed to upload document.");
-    } finally {
-      setUploading(false);
-    }
-  };
+            setFormData({ title: "", description: "", projectId: "", uploadedBy: "" });
+            setFile(null);
+      } catch (error) {
+         console.error(error);
+         setMessage("❌ Failed to upload document.");
+      } finally {
+         setUploading(false);
+      }
+   };
 
-  // Fetch document by ID
-  const handleFetch = async () => {
-    if (!searchId) return alert("Enter a document ID!");
-    setLoading(true);
-    setFoundDoc(null);
-    try {
-      const data = await getDocumentById(searchId);
-      setFoundDoc(data);
-    } catch (error) {
-      setMessage("❌ Document not found.");
-    } finally {
-      setLoading(false);
-    }
-  };
+   const handleFetch = async () => {
+      if (!searchId) return alert("Enter a document ID!");
+      setLoading(true);
+      setFoundDoc(null);
+      try {
+         const data = await getDocumentById(searchId);
+         setFoundDoc(data);
+      } catch (error) {
+         setMessage("❌ Document not found.");
+      } finally {
+         setLoading(false);
+      }
+   };
 
-  // Delete document
-  const handleDelete = async () => {
-    if (!searchId) return alert("Enter document ID to delete!");
-    if (!window.confirm("Are you sure you want to delete this document?")) return;
+   // Delete document
+   const handleDelete = async () => {
+      if (!searchId) return alert("Enter document ID to delete!");
+      if (!window.confirm("Are you sure you want to delete this document?")) return;
 
-    try {
-      await deleteDocument(searchId);
-      setMessage("🗑️ Document deleted successfully.");
-      setFoundDoc(null);
-    } catch (error) {
-      setMessage("❌ Failed to delete document.");
-    }
-  };
+      try {
+         await deleteDocument(searchId);
+         setMessage("🗑️ Document deleted successfully.");
+         setFoundDoc(null);
+      } catch (error) {
+         setMessage("❌ Failed to delete document.");
+      }
+   };
 
-  return (
-    <div className="container mt-4" style={{ maxWidth: "700px" }}>
-      <Card className="shadow-lg p-4">
-        <h3 className="text-center mb-4 text-primary">📄 Document Manager</h3>
+   return (
+      <div className="container mt-4" style={{ maxWidth: "700px" }}>
+         <Card className="shadow-lg p-4">
+            <h3 className="text-center mb-4 text-primary">📄 Document Manager</h3>
 
-        {/* Upload Form */}
-        <Form onSubmit={handleSubmit}>
-          <Form.Group className="mb-3">
-            <Form.Label>Document Title</Form.Label>
-            <Form.Control
-              type="text"
-              name="title"
-              placeholder="Enter document title"
-              value={formData.title}
-              onChange={handleChange}
-              required
-            />
-          </Form.Group>
+            {/* Upload Form */}
+            <Form onSubmit={handleSubmit}>
+               <Form.Group className="mb-3">
+                  <Form.Label>Document Title</Form.Label>
+                  <Form.Control
+                     type="text"
+                     name="title"
+                     placeholder="Enter document title"
+                     value={formData.title}
+                     onChange={handleChange}
+                     required
+                  />
+               </Form.Group>
 
-          <Form.Group className="mb-3">
-            <Form.Label>Description</Form.Label>
-            <Form.Control
-              as="textarea"
-              rows={3}
-              name="description"
-              placeholder="Enter description"
-              value={formData.description}
-              onChange={handleChange}
-              required
-            />
-          </Form.Group>
+               <Form.Group className="mb-3">
+                  <Form.Label>Description</Form.Label>
+                  <Form.Control
+                     as="textarea"
+                     rows={3}
+                     name="description"
+                     placeholder="Enter description"
+                     value={formData.description}
+                     onChange={handleChange}
+                     required
+                  />
+               </Form.Group>
 
-          <Form.Group className="mb-3">
-            <Form.Label>Project ID</Form.Label>
-            <Form.Control
-              type="text"
-              name="projectId"
-              placeholder="Enter project ID"
-              value={formData.projectId}
-              onChange={handleChange}
-              required
-            />
-          </Form.Group>
+               <Form.Group className="mb-3">
+                  <Form.Label>Project ID</Form.Label>
+                  <Form.Control
+                     type="text"
+                     name="projectId"
+                     placeholder="Enter project ID"
+                     value={formData.projectId}
+                     onChange={handleChange}
+                     required
+                  />
+               </Form.Group>
             
           {/* ✅ RE-ADDED UPLOADER/MEMBER ID FIELD */}
-          <Form.Group className="mb-3">
-            <Form.Label>Uploader/Member ID</Form.Label>
-            <Form.Control
-              type="text"
-              name="uploadedBy"
-              placeholder="Enter the Uploader's Member ID"
-              value={formData.uploadedBy}
-              onChange={handleChange}
-              required
-            />
-          </Form.Group>
+               <Form.Group className="mb-3">
+                  <Form.Label>Uploader/Member ID</Form.Label>
+                  <Form.Control
+                     type="text"
+                     name="uploadedBy"
+                     placeholder="Enter the Uploader's Member ID"
+                     value={formData.uploadedBy}
+                     onChange={handleChange}
+                     required
+                  />
+               </Form.Group>
 
-          <Form.Group className="mb-3">
-            <Form.Label>Choose File</Form.Label>
-            <Form.Control type="file" onChange={handleFileChange} required />
-            {file && <Form.Text>Selected file: {file.name}</Form.Text>}
-          </Form.Group>
+               <Form.Group className="mb-3">
+                  <Form.Label>Choose File</Form.Label>
+                  <Form.Control type="file" onChange={handleFileChange} required />
+                  {file && <Form.Text>Selected file: {file.name}</Form.Text>}
+               </Form.Group>
 
-          <Button type="submit" variant="primary" disabled={uploading} className="w-100">
-            {uploading ? (
-              <>
-                <Spinner animation="border" size="sm" /> Uploading...
-              </>
-            ) : (
-              "Upload Document"
-            )}
-          </Button>
-        </Form>
+               <Button type="submit" variant="primary" disabled={uploading} className="w-100">
+                  {uploading ? (
+                     <>
+                        <Spinner animation="border" size="sm" /> Uploading...
+                     </>
+                  ) : (
+                     "Upload Document"
+                  )}
+               </Button>
+            </Form>
 
-        {message && <Alert variant="info" className="mt-3">{message}</Alert>}
+            {message && <Alert variant="info" className="mt-3">{message}</Alert>}
 
-        <hr className="my-4" />
+            <hr className="my-4" />
 
-        {/* Get/Delete Section */}
-        <h5 className="text-secondary mb-3">🔍 Find or Delete Document</h5>
-        <Form.Group className="mb-3 d-flex">
-          <Form.Control
-            type="text"
-            placeholder="Enter Document ID"
-            value={searchId}
-            onChange={(e) => setSearchId(e.target.value)}
-          />
-          <Button variant="success" className="ms-2" onClick={handleFetch} disabled={loading}>
-            {loading ? "Searching..." : "Get Document"}
-          </Button>
-          <Button variant="danger" className="ms-2" onClick={handleDelete}>
-            Delete
-          </Button>
-        </Form.Group>
+            {/* Get/Delete Section */}
+            <h5 className="text-secondary mb-3">🔍 Find or Delete Document</h5>
+            <Form.Group className="mb-3 d-flex">
+               <Form.Control
+                  type="text"
+                  placeholder="Enter Document ID"
+                  value={searchId}
+                  onChange={(e) => setSearchId(e.target.value)}
+               />
+               <Button variant="success" className="ms-2" onClick={handleFetch} disabled={loading}>
+                  {loading ? "Searching..." : "Get Document"}
+               </Button>
+               <Button variant="danger" className="ms-2" onClick={handleDelete}>
+                  Delete
+               </Button>
+            </Form.Group>
 
-        {foundDoc && (
-          <Card className="p-3 bg-light">
-            <h6>📘 Document Details:</h6>
-            <p><strong>Title:</strong> {foundDoc.title}</p>
-            <p><strong>Description:</strong> {foundDoc.description}</p>
-            <p><strong>Uploaded By:</strong> {foundDoc.uploadedBy}</p>
-            <p><strong>Project ID:</strong> {foundDoc.projectId}</p>
-            <p><strong>Uploaded At:</strong> {foundDoc.uploadedAt}</p>
-          </Card>
-        )}
-      </Card>
-    </div>
+            {foundDoc && (
+              <Card className="p-3 bg-light">
+                <h6>📘 Document Details:</h6>
+                <p><strong>Title:</strong> {foundDoc.title}</p>
+                <p><strong>Description:</strong> {foundDoc.description}</p>
+                <p>
+                  <strong>Uploaded By:</strong>{" "}
+                  {foundDoc.uploadedBy?.fullName || foundDoc.uploadedBy?.id || "N/A"}
+                </p>
+                <p><strong>Project ID:</strong> {foundDoc.projectId || "N/A"}</p>
+                <p><strong>Uploaded At:</strong> {foundDoc.uploadedAt || "N/A"}</p>
+
+                {/* Optional: Show full object for debugging */}
+                <details className="mt-2">
+                  <summary>Raw Data</summary>
+                  <pre>{JSON.stringify(foundDoc, null, 2)}</pre>
+                </details>
+              </Card>
+            )}
+
+
+         </Card>
+      </div>
   );
 };
 

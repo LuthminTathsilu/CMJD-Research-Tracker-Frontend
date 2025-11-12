@@ -10,7 +10,8 @@ import { AuthProvider } from './components/auth/AuthProvider';
 import { Project } from "./components/projects/Project";
 import { Milestone } from "./components/milestone/Milestone";
 import { PrincipalInvestigator } from "./components/pi/PrincipalInvestigator";
-
+import { Member } from "./components/member/Member";
+import { Admin } from "./components/admin/Admin";
 
 function App() {
   return (
@@ -20,13 +21,17 @@ function App() {
         <div className="container mt-4">
           <Routes>
             <Route path="/" element={<Home />} />
-
             <Route path="/signin" element={<SignIn />} />
             <Route path="/signup" element={<SignUp />} />
             <Route path="/documents" element={<Document />} />
             <Route path="/projects" element={<Project />} />
-            <Route path="/milestone" element={<Milestone projectId={""} />} />
+            
+            {/* ✅ FIXED: no need to manually pass projectId */}
+            <Route path="/milestone/:projectId" element={<Milestone />} />
+
             <Route path="/pi" element={<PrincipalInvestigator />} />
+            <Route path="/member" element={<Member />} />
+            <Route path="/admin" element={<Admin />} />
           </Routes>
         </div>
       </BrowserRouter>

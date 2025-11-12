@@ -1,6 +1,11 @@
 import axios from 'axios';
 
 const baseURL = "http://localhost:8044/api/v1/milestone";
+const getToken = (): string => {
+  const token = localStorage.getItem("authToken");
+  if (!token) throw new Error("No auth token found");
+  return `Bearer ${token}`;
+};
 
 // --- Models ---
 export interface MilestoneModel {
@@ -28,24 +33,22 @@ export interface MilestoneInputModel {
 
 // --- Service Functions ---
 
-const getToken = (): string => {
-    const token = localStorage.getItem("authToken");
-    if (!token) throw new Error("No auth token found");
-    return `Bearer ${token}`;
-};
 
 // GET /api/v1/milestone/projects/{projectId}
 export const getMilestonesByProject = async (projectId: string): Promise<MilestoneModel[]> => {
-    try {
-        const response = await axios.get(`${baseURL}/projects/${projectId}`, {
-            headers: { "Authorization": getToken() }
-        });
-        return response.data;
-    } catch (err) {
-        console.error("Error fetching milestones:", err);
-        throw err;
-    }
-}
+  try {
+    const response = await axios.get(`${baseURL}/projects/${projectId}`, {
+      headers: {
+        "Authorization": getToken() // ✅ send token for auth
+      }
+    });
+    return response.data;
+  } catch (err) {
+    console.error("Error fetching milestones:", err);
+    throw err;
+  }
+};
+
 
 // POST /api/v1/milestone/projects/{projectId}
 export const addMilestone = async (projectId: string, milestone: MilestoneInputModel): Promise<MilestoneModel> => {

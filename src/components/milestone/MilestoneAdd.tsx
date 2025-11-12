@@ -54,8 +54,12 @@ const MilestoneAdd = ({
     };
     const hanldeOnSubmit = async () => {
         if (!milestone.title || !milestone.dueDate || !milestone.createdBy?.memberId) {
-            alert("Please fill in Title, Due Date, and Created By Member ID.");
-            return;
+        alert("Please fill in Title, Due Date, and Created By Member ID.");
+        return;
+        }
+        if (!projectId || projectId.trim() === "") {
+        alert("Cannot add milestone: Project ID is missing.");
+        return;
         }
 
         try {
@@ -113,6 +117,18 @@ const MilestoneAdd = ({
                             checked={milestone.isCompleted}
                             onChange={handleChange}
                         />
+                    </Form.Group>
+                   <Form.Group as={Col} md="12" className="mb-3">
+                        <Form.Label>Project ID:</Form.Label>
+                        <Form.Control 
+                            type="text" 
+                            name="projectIdDisplay" 
+                            value={projectId} 
+                            readOnly 
+                        />
+                        <Form.Text className="text-muted">
+                            Milestone will be created for this project.
+                        </Form.Text>
                     </Form.Group>
                 </Form>
             </Modal.Body>

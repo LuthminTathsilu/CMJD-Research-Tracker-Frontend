@@ -42,12 +42,15 @@ export const NavBar: React.FC = () => {
             <Nav.Link as={Link} to="/projects" style={linkStyle("/projects")}>
               Project Maintainance 
             </Nav.Link> 
-             <Nav.Link as={Link} to="/milestone" style={linkStyle("/milestone")}>
-              Milestone Maintainance 
-            </Nav.Link>
             <Nav.Link as={Link} to="/pi" style={linkStyle("/pi")}>
               Investigator Maintainance 
             </Nav.Link> 
+            <Nav.Link as={Link} to="/member" style={linkStyle("/member")}>
+              Research Member Maintainance 
+            </Nav.Link>
+            <Nav.Link as={Link} to="/admin" style={linkStyle("/admin")}>
+              Admin Maintainance 
+            </Nav.Link>
             <Button variant="danger" onClick={handleOnLogut}>
                   Logout
             </Button>
